@@ -6,3 +6,5 @@ Sample of creating chat using http://socket.io/
 ```
 npm i && npm start
 ``` 
+
+Visit your app at http://localhost:3000.
