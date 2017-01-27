@@ -1,6 +1,8 @@
-const app = require('express')(),
-     http = require('http').Server(app),
-       io = require('socket.io')(http);
+const express = require('express'),
+          app = express(),
+     {static} = express,
+         http = require('http').Server(app),
+           io = require('socket.io')(http);
 
 app.set('port', (process.env.PORT || 3000));
 
@@ -8,11 +10,13 @@ app.get('/', function(req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
+app.use(static(__dirname + '/source'));
+
 io.on('connection', function(socket) {
 
-  socket.on('chat', function(messageObject) {
-     io.emit('chat', messageObject);
-  });
+ socket.on('chat', function(messageObject) {
+  io.emit('chat', messageObject);
+ });
 
 });
 

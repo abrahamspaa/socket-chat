@@ -3,49 +3,11 @@
 
   <head>
       <title>Let's chat</title>
-      <style>
-          * {
-              margin: 0;
-              padding: 0;
-              box-sizing: border-box;
-          }
-          body {
-              font: 13px Helvetica, Arial;
-          }
-          form {
-              background: #000;
-              padding: 3px;
-              position: fixed;
-              bottom: 0;
-              width: 100%;
-          }
-          form input {
-              border: 0;
-              padding: 10px;
-              width: 90%;
-              margin-right: .5%;
-          }
-          form input[type="submit"] {
-              width: 8%;
-              background: rgb(130, 224, 255);
-              border: none;
-              padding: 10px;
-          }
-          #messages {
-              list-style-type: none;
-              margin: 0;
-              padding: 0;
-          }
-          #messages li {
-              padding: 5px 10px;
-          }
-          #messages li:nth-child(odd) {
-              background: #eee;
-          }
-      </style>
+      <link rel="stylesheet" href="/styles/main.css" type="text/css" />
   </head>
 
   <body>
+
       <ul id="messages"></ul>
 
       <form id="chatForm" onsubmit="return onChat()">
@@ -53,93 +15,9 @@
           <input type="submit" value="Send">
       </form>
 
-      <script src="/socket.io/socket.io.js"></script>
+      <script src="/socket.io/socket.io.js" type="text/javascript"></script>
+      <script src="/scripts/main.js" type="text/javascript"></script>
 
-      <script>
-        const socket = io(),
-        inputMessage = document.getElementById("inputMessage"),
-            messages = document.getElementById("messages");
-
-        let userName = null;
-
-        /**
-         * check if it is string and return DOM or string
-         *
-         * @content {object / string} string or already create DOM object
-         *
-         * @isDOM   {Boolen} we need create DOM or Text Node
-         * 
-         * @return {object} DOM
-        **/
-
-        function isString(content, isDOM) {
-
-         return typeof content === 'string' ? (isDOM ? document.createElement(content) : document.createTextNode(content)) : content;        
-        }
-
-
-        /**
-         * Create HTML DOM based on the input
-         *
-         * @tagName {string / object} HTML tag or DOM tag
-         * @content {string / object} Content which will be published inside
-         *
-         *
-         * @return DOM object 
-         *
-        **/
-
-        function htmlDOMCreater (tagName, content) {
-
-          let htmlDOM = isString(tagName, true),
-             textNode = isString(content, false);  
-
-              htmlDOM.appendChild(textNode);
-
-          return htmlDOM;
-
-        }
-        
-        // Get user name
-        function setUserName () {
-
-           do {
-              userName = prompt('Please enter your name for chat');                
-           } while (!userName);
-
-        }
-
-         setUserName();
-
-          // Get the chat value
-          socket.on('chat', function({message, userName}) {
-
-              let chatName = htmlDOMCreater('h4', userName),
-                        LI = htmlDOMCreater('li', chatName);
-
-              messages.appendChild(htmlDOMCreater(LI, message));
-          });
-                                            
-          function onChat() {
-
-           if (inputMessage.value) {
-
-              let messageObject = {
-                 message: inputMessage.value,
-                 userName
-              };
-
-              // setting message object in emit socket
-              socket.emit('chat', messageObject);
-
-              // clearing input value
-              inputMessage.value = '';
-           }
-
-           return false;
-          };
-
-      </script>
   </body>
 
 </html>
